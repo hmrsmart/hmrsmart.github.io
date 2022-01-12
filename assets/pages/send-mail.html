@@ -1,0 +1,116 @@
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+<form id="my-great-dropzone" class="dropzone" method="post" enctype="multipart/form-data">
+</form>
+
+        <script>
+var script_arr = [
+    //'https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js'
+    'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
+    //'./index_files/tinymce/langs/ar.js',
+    //'index_files/script.js'
+];
+
+$.getMultiScripts(script_arr).done(function() {
+    var fileList=[];
+/*
+Dropzone.options.uploadForm = { // The camelized version of the ID of the form element
+
+  // The configuration we've talked about above
+  autoProcessQueue: false,
+  uploadMultiple: true,
+  parallelUploads: 100,
+  maxFiles: 100,
+
+  // The setting up of the dropzone
+  init: function() {
+    var myDropzone = this;
+
+    // First change the button to actually tell Dropzone to process the queue.
+    this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+      // Make sure that the form isn't actually being sent.
+      e.preventDefault();
+      e.stopPropagation();
+      myDropzone.processQueue();
+    });
+
+    // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+    // of the sending event because uploadMultiple is set to true.
+    this.on("sendingmultiple", function() {
+      // Gets triggered when the form is actually being sent.
+      // Hide the success button or the complete form.
+    });
+    this.on("successmultiple", function(files, response) {
+      // Gets triggered when the files have successfully been sent.
+      // Redirect user or notify of success.
+    });
+    this.on("errormultiple", function(files, response) {
+      // Gets triggered when there was an error sending the files.
+      // Maybe show form again, and notify user of error
+    });
+  }
+ 
+}
+
+$("#uploadForm").dropzone({ 
+    //url: "upload.php" ,
+    addRemoveLinks: true,
+    //autoProcessQueue: false,
+    dictDefaultMessage: "اضغط هنا لرفع الركتاب",
+    params: {'param_1':'xyz','para_2':'aaa'},
+
+
+});
+Dropzone.options.myGreatDropzone = { // camelized version of the `id`
+    paramName: "file", // The name that will be used to transfer the file
+    maxFilesize: 2, // MB
+    accept: function(file, done) {
+      if (file.name == "justinbieber.jpg") {
+        done("Naha, you don't.");
+      }
+      else { done(); }
+    }
+  }*/
+Dropzone.options.myGreatDropzone = { // The camelized version of the ID of the form element
+
+  // The configuration we've talked about above
+  //url: "/up2drv/upload.php" ,
+  url: "/upload.php" ,
+  paramName: "file", // The name that will be used to transfer the file
+  params: {'my_id':my_id,'my_name':my_name},
+  maxFilesize: 2, // MB
+  addRemoveLinks: true,
+/*  removedfile: function(file) {
+$.ajax({
+url: "upload.php",
+type: "POST",
+data: { 'name': file.name, stat:"delete" }
+});
+
+
+
+},
+
+
+  success: function(file, serverFileName) {
+  fileList[serverFileName] = {"serverFileName" : serverFileName, "fileName" : file.name };
+},
+  
+  init: function() {
+            this.on("complete", function(file) {
+                $(".dz-remove").click(function() {
+                    alert(JSON.stringify(fileList));
+  $.ajax({
+    url: "upload.php",
+    type: "POST",
+    data: { "fileList" : JSON.stringify(fileList), stat:"delete" }
+});
+});
+            });
+        }, */
+  dictDefaultMessage: "اضغط هنا لرفع الركتاب"
+}
+
+Dropzone.discover();
+});
+        </script>

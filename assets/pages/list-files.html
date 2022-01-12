@@ -1,0 +1,252 @@
+<?php	
+session_start();
+	error_reporting(0);
+	include('res/includes/config.php');
+	
+    ?>
+            <!-- Start XP Contentbar -->    
+            
+
+                <!-- Start XP Row -->
+                <div class="card height-auto">
+                    <div class="card-body">
+                        
+                        <form id="myForm" action="javascript:;" onsubmit="fsub()" class="mg-b-20">
+                            <div class="row gutters-8">
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input type="text" placeholder="بحث بواسطة اسم المرسل ..." class="form-control">
+                                </div>
+                                <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
+                                    <input type="text" placeholder="بحث بواسطة الموضوع ..." class="form-control">
+                                </div>
+                                <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input id="datepicker" type="text" placeholder="بحث بواسطة التاريخ ..." class="form-control">
+                                </div>
+                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                <button type="submit" class="btn btn-rounded btn-primary"><i class="icon-magnifier"></i> </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="load_data" class="table-responsive">
+                            <table id="mailsTable" class="table display data-table text-nowrap">
+                                
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="load_data_message" class="card-footer bg-white">
+                                    
+                                </div>
+                    </div>
+                </div>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+<script>
+function viewdoc(fnm,ats,path){
+docs = ats.split("|");    
+    inp = `<div class="card height-auto">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-3" id="defaultTab" role="tablist">
+                                 
+                                </ul>
+                                <div class="tab-content" id="defaultTabContent">
+                                 
+                                </div>
+                        <div id="load_data_message" class="card-footer bg-white">
+                                    
+                                </div>
+                    </div>
+                </div>`;
+
+$( ".xp-contentbar" ).html(inp);
+path = path+'/';
+x = 1;
+txt = '';
+asd = '';
+dclas = '';
+if (fnm.length >=4){
+    $( "#defaultTab" ).append('<li class="nav-item"><a class="nav-link" id="book-tab" data-toggle="tab" href="#book" role="tab" aria-controls="book" aria-selected="true">الكتاب</a></li>');
+
+$( "#defaultTabContent" ).append('<div class="tab-pane fade show active" id="book" role="tabpanel" aria-labelledby="book-tab"><embed src="uploads/'+path+fnm+'" width="100%" height="500" type="application/pdf"></div>');
+txt = 'المرفق '+x;
+asd = 'false';
+dclas = 'tab-pane fade';
+x = 2;
+}else{
+txt = 'الكتاب';
+asd = 'false';
+dclas = 'tab-pane fade show active';    
+}
+jQuery.each(docs, function(index, item) {
+    
+    $( "#defaultTab" ).append('<li class="nav-item"><a class="nav-link" id="'+index+'-tab" data-toggle="tab" href="#a'+index+'" role="tab" aria-controls="'+index+'" aria-selected="'+asd+'">'+txt+'</a></li>');
+
+$( "#defaultTabContent" ).append('<div class="'+dclas+'" id="a'+index+'" role="tabpanel" aria-labelledby="'+index+'-tab"><embed src="uploads/'+path+item+'" width="100%" height="500" type="application/pdf"></div>');
+//<embed src="'+item+'" width="100%" height="100%" type="application/pdf">
+txt = 'المرفق '+(index+x);
+asd = 'false';
+dclas = 'tab-pane fade';
+});    
+
+}
+ var limit = 10;
+ var start = 0;
+ var sfld0 = '';
+ var sfld1 = '';
+ var sfld2 = '';
+ var action = 'inactive';
+ function fsub(){
+ form = document.getElementById('myForm'); 
+        sfld0 = form.elements[0].value;
+        sfld1 = form.elements[1].value;
+        sfld2 = form.elements[2].value;
+        //action = 'inactive';     
+        limit = 10;
+        start = 0;
+        $('#mailsTable > tbody').empty();
+        load_country_data(limit, 0);
+ }
+ function load_country_data(limit, start)
+ {
+  $.ajax({
+   url:"data-load.php",
+   method:"POST",
+   data:{limit:limit, start:start, sfld0:my_id, sfld1:sfld0, sfld2:sfld1, sfld3:sfld2, tbl:4},
+   cache:false,
+   success:function(data)
+   {
+
+
+$("#dashboard-breadcrumb-item").text(" البريد الوارد");
+console.log(my_id);
+//var set = JSON.parse(data);
+/* for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+        console.log(key + " -> " + data[key]);
+    }
+}  */
+var set = JSON.parse(data);
+           
+$( "#datepicker" ).datepicker();											
+$( "#datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );									
+
+inp = '';
+   for(var i = 0; i < set.length; i++){
+//------------------------------	   
+					inp += '<tr '+((set[i].is_read==0) ? 'class="email-unread"' : '')+'>';                                                
+					inp += '<td>';
+					inp += '<div class="custom-control custom-checkbox">';
+                    inp += '<input type="checkbox" class="custom-control-input" id="emailCheck'+set[i].id+'">';
+                    inp += '<label class="custom-control-label psn-abs" for="emailCheck'+set[i].id+'"></label>';
+                    inp += '</div>';
+                    inp += '</td>';
+                    inp += '<td><a href="#" onclick="update_mail(1,'+(1-set[i].star)+','+set[i].id+')"><i id="'+set[i].id+'" class="icon-star'+((set[i].star==0) ? " text-danger" : "")+' font-18"></i></td>';
+                    inp += '<td><a href="#" onclick="viewdoc(\''+set[i].file_name+'\',\''+set[i].attachments+'\',\''+set[i].from_id+'\')">'+set[i].from_name+'</a></td>';
+                    inp += '<td>'+((set[i].is_read==0) ? '<span class="badge badge-success badge-pill mr-2">New</span>' : '')+'<a href="#'+set[i].id+'" data-toggle="collapse" data-parent="#posts">'+set[i].subject+'</a></td>';
+                    inp += '<td>'+set[i].date+'</td>';
+                    inp += '</tr>'
+
+$("#mailsTable > tbody").append(inp);
+					inp = '';            
+                                
+	}
+
+	   //alert(data["id"]);
+    //$('#load_data').append(inp);
+    if(set == '')
+    {
+     $('#load_data_message').html("<button type='button' class='btn btn-info'>لا توجد بيانات اضافية</button>");
+     action = 'active';
+    }
+    else
+    {
+     $('#load_data_message').html("<button type='button' class='btn btn-warning'>يرجى الانتظار....</button>");
+     action = "inactive";
+    }
+   }
+  });
+ }
+      function old_function() {
+ if(action == 'inactive')
+ {
+  action = 'active';
+  load_country_data(limit, start);
+ }
+ $(window).scroll(function(){
+  if($(window).scrollTop() + $(window).height() > $("#load_data").height() && action == 'inactive')
+  {
+   action = 'active';
+   start = start + limit;
+   setTimeout(function(){
+    load_country_data(limit, start);
+   }, 1000);
+  }
+ });
+}
+
+function update_mail(fld,info_str,db_key){  
+    //alert(fld+","+info_str+","+db_key);
+  $.ajax({
+   url:"update-mail.php",
+   method:"POST",
+   data:{fld:fld,info_str:info_str,db_key:db_key},
+   cache:false,
+   success:function(data)
+   {
+      if (info_str==0) {
+          $('li #'+db_key).removeClass('text-danger');
+          }else{
+          $('li #'+db_key).addClass('text-danger');
+          }
+ 
+   }
+  });
+}
+
+
+      /**
+       * Print files.
+       */
+//      function listFiles() {
+        gapi.client.drive.files.list({
+          //'driveId':'Myfoldy',
+          'pageSize': 5,
+          'fields': "nextPageToken, files"
+        }).then(function(response) {
+          //appendPre('Files:');
+          var files = response.result.files;
+          if (files && files.length > 0) {
+              inp = '';
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (file.trashed == false) {
+
+//------------------------------	   
+					inp += '<tr '+((set[i].is_read==0) ? 'class="email-unread"' : '')+'>';                                                
+					inp += '<td>';
+					inp += '<div class="custom-control custom-checkbox">';
+                    inp += '<input type="checkbox" class="custom-control-input" id="emailCheck'+set[i].id+'">';
+                    inp += '<label class="custom-control-label psn-abs" for="emailCheck'+set[i].id+'"></label>';
+                    inp += '</div>';
+                    inp += '</td>';
+                    inp += '<td><a href="#" onclick="update_mail(1,'+(1-set[i].star)+','+set[i].id+')"><i id="'+set[i].id+'" class="icon-star'+((set[i].star==0) ? " text-danger" : "")+' font-18"></i></td>';
+                    inp += '<td><a href="#" onclick="viewdoc(\''+set[i].file_name+'\',\''+set[i].attachments+'\',\''+set[i].from_id+'\')">'+file.owners['displayName']+'</a></td>';
+                    inp += '<td>'+((set[i].is_read==0) ? '<span class="badge badge-success badge-pill mr-2">New</span>' : '')+'<a href="#'+set[i].id+'" data-toggle="collapse" data-parent="#posts">'+set[i].subject+'</a></td>';
+                    inp += '<td>'+file.createdTime+'</td>';
+                    inp += '</tr>'
+
+              $("#mailsTable > tbody").append(inp);
+              //appendPre(file.name + ' (' + file.id + ')');
+              //console.log(file.webViewLink);
+              }
+            }
+          } else {
+            appendPre('No files found.');
+          }
+        });
+//      }
+
+</script>    

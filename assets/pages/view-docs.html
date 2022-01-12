@@ -1,0 +1,33 @@
+
+                <!-- Start XP Row -->
+                <div class="card height-auto">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-3" id="defaultTab" role="tablist">
+                                 
+                                </ul>
+                                <div class="tab-content" id="defaultTabContent">
+                                 
+                                </div>
+                        <div id="load_data_message" class="card-footer bg-white">
+                                    
+                                </div>
+                    </div>
+                </div>
+
+<script>
+docs = ['https://drive.google.com/file/d/1ZXL39nr_e6ULhEjgpq7OF_K58nOdPVUq/preview?usp=drivesdk','https://docs.google.com/document/d/1aYbC6w13pGwr34bVfSKkKyVZZZ-UPnrE8Rj3V9wHdE0/preview','https://drive.google.com/file/d/1Y8O5bC5DPcHa355jBzrHdr-13aRoo5CD/view'];
+
+txt = 'الكتاب';
+asd = 'true';
+dclas = 'tab-pane fade show active';
+jQuery.each(docs, function(index, item) {
+    $( "#defaultTab" ).append('<li class="nav-item"><a class="nav-link" id="'+index+'-tab" data-toggle="tab" href="#a'+index+'" role="tab" aria-controls="'+index+'" aria-selected="'+asd+'">'+txt+'</a></li>');
+
+$( "#defaultTabContent" ).append('<div class="'+dclas+'" id="a'+index+'" role="tabpanel" aria-labelledby="'+index+'-tab">'+index+'<iframe src="'+item+'" width="100%" height="100%" type="application/pdf"></div>');
+//<embed src="'+item+'" width="100%" height="100%" type="application/pdf">
+txt = 'المرفق '+(index+1);
+asd = 'false';
+dclas = 'tab-pane fade';
+});    
+//$( "#load_data" ).attr( "src",'https://drive.google.com/file/d/1lfiPVZFKWgwkxoDE7kG-MHNocR6fUTvk/preview?usp=sharing' );
+</script>    

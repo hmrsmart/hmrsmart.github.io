@@ -1,0 +1,311 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" integrity="sha512-0V10q+b1Iumz67sVDL8LPFZEEavo6H/nBSyghr7mm9JEQkOAm91HNoZQRvQdjennBb/oEuW+8oZHVpIKq+d25g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/ui/trumbowyg.min.css" integrity="sha512-nwpMzLYxfwDnu68Rt9PqLqgVtHkIJxEPrlu3PfTfLQKVgBAlTKDmim1JvCGNyNRtyvCx1nNIVBfYm8UZotWd4Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                        <div class="xp-email-rightbar">
+                            <div class="card m-b-30 text-right">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title text-black">كتاب جديد</h5>
+                                </div>
+                                <div class="card-body">  
+                                      <div class="form-group row">
+                                        <div class="col-sm-4">
+                                          <input type="email" class="form-control" id="to_name" name="to_name" placeholder="اسم المرسل اليه">
+                                        </div>
+                                      </div>
+                                          <input type="hidden" id="to_id">
+                                       
+                                      <div class="form-group row">
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="subject" placeholder="الموضوع">
+                                        </div>
+                                      </div>                                      
+                                      <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <textarea id="editor11" class="summernote1 speecharea" name="textarea#basic-example"></textarea>
+                                                <div id="summernote"></div>
+                                            </div>
+                                      </div>
+                                      <div class="form-group row text-center">
+                                        <div class="col-sm-10">
+                                          <button type="button" id="sendsy" name="send" class="btn btn-primary my-1">ارسال <i class="icon-paper-plane"></i></button>
+                                          <button type="submit" name="save" class="btn btn-success my-1">حفظ <i class="icon-drawer"></i></button>
+                                          <button type="submit" name="delete" class="btn btn-danger my-1">حذف <i class="icon-trash"></i></button>
+                                        </div>
+                                      </div>
+                                            <button type="button" onclick="swaly()">SET</button>
+                                            <button type="button" onclick="swaly1()">GET</button>
+                                            <button type="button" onclick="spdf()">Save PDF</button>
+                                            <button type="button" onclick="h2p()">Show PDF</button>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+                                    <select id="select_language" onchange="updateCountry()"><option value="ar-EG">Arabic</option><option value="en-US">English</option></select>
+                                       <button id="start-record-btn" title="Start Recording">Start Recognition</button>
+                <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
+                <button id="save-note-btn" title="Save Note">Save Note</button>   
+                <p id="recording-instructions">Press the <strong>Start Recognition</strong> button and allow access.</p>
+                                </div>
+                            </div>
+                        </div>
+<!-- include summernote css/js -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.17/summernote-bs4.min.css" rel="stylesheet">
+
+<script>
+function spdf(){
+
+ to_name = $("#to_name").val();
+ to_id = $("#to_id").val();
+ subject = $("#subject").val();
+
+var myContent = $('#editor11').summernote('code');
+myContent = myContent.replace('&nbsp;', ' ');
+myContent = myContent.replace('<', '*^*');
+myContent = myContent.replace('>', '$^$');
+
+//myContent = myContent.replace('<', '\<');
+//myContent = myContent.replace('>', '\>');
+//myContent1 = myContent.replace('&nbsp;', ' ');   
+
+$.ajax({                                      
+      url: 'index_files/tcpdf/examples/save_pdf.php',              
+      type: "post", 
+     // dataType: "json",   
+     dataType: 'html',      
+      data: {to_id : to_id, subject : subject, myContent : myContent, from_name : my_name, emid : my_id},
+      //data: "to_id="+to_id+"&subject="+subject+"&myContent="+myContent1+"&to_name="+to_name+"&emid="+gsess,                
+      beforeSend: function() {
+          //$('#current_page').append("loading..");
+          },
+      success: function(e) {
+         console.log(e);
+       $('.xp-contentbar').html('<iframe src="'+e+'" style="width:100%;height:700px;"></iframe>');
+         //alert('Success');
+       },
+      error: function(er) {
+        alert('Error');
+      } 
+   });    
+//$('.xp-contentbar').html('<iframe src="index_files/تنفيذ توصيات رقم 3681 في 23-11-2021.pdf" style="width:100%;height:700px;"></iframe>');
+ 
+
+//<object data="index_files/2SC4106.pdf"></object>
+}
+function swaly1(){
+//var myContent = tinymce.activeEditor.getContent();
+var myContent = $('#editor11').summernote('code');
+myContent = myContent.replace('&nbsp;', ' ');
+console.log(myContent);
+}
+
+function h2p(){
+var opt = {
+  filename:     'myfile.pdf',
+  image:        { type: 'jpeg', quality: 0.98 },
+  html2canvas:  { scale: 1 },
+  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+};
+
+//var element = document.getElementById('element-to-print');
+var element = $('#editor11').summernote('code');
+myContent = element.replace('&nbsp;', ' ');
+html2pdf().set(opt).from(myContent).save();
+
+}
+
+// load_script('https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js','script');
+// load_script('https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/trumbowyg.min.js','script');
+// load_script('index_files/tinymce/tinymce.min.js','script');
+// load_script('index_files/script.js','script');
+function swaly(){
+//console.log($("#editor11").val());
+//$("#editor11").html("Hello"); 
+
+vbn = `<p>السيد رئيس الجامعة المحترم...</p>
+<p> </p>
+<p style="text-align: center;">م / فريق عمل</p>
+<p style="text-align: right;">تحية طيبة...</p>
+<p style="text-align: right;">      يرجى التفضل بالموافقة على تشكيل فريق عمل.</p>
+<p style="text-align: right;"> </p>
+<p style="text-align: center;">مع التقدير...</p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: left;">م.م. حسين محمد رضا</p>
+<p style="text-align: left;">شعبة المدن الذكية</p>`
+//$('#editor11').trumbowyg('html', vbn);
+$('#editor11').summernote('code', vbn);
+//$('#editor11').val(vbn);
+//tinymce.activeEditor.setContent(vbn);
+}
+var script_arr = [
+    'https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.25.1/trumbowyg.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js',
+    './index_files/tinymce/tinymce.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
+    'index_files/script.js'
+];
+$.getMultiScripts(script_arr).done(function() {
+$(document).ready(function() {
+//$.getScript('https://smartuoitc.rf.gd/index_files/tinymce/tinymce.min.js', function() {
+//$.getScript('index_files/script.js');
+
+
+//$.getScript("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.17/summernote-bs4.min.js", function(){
+   // $('#editor1').summernote({
+   //     height: 300,                 // set editor height
+ // minHeight: null,             // set minimum height of editor
+  //maxHeight: null,             // set maximum height of editor
+ // focus: true  
+//});
+//});
+//$.getMultiScripts(script_arr, './index_files/').done(function() {
+//$.getMultiScripts(script_arr).done(function() {
+
+ $('#editor11').summernote({
+   height: 300,                 // set editor height
+ minHeight: null,             // set minimum height of editor
+maxHeight: null,             // set maximum height of editor
+ focus: true  
+});
+
+//$('#editor11').trumbowyg();
+    tinymce.remove();    
+    tinymce.init({
+        selector: '#editor111',  // change this value according to your HTML
+  directionality : 'rtl',
+  language: 'ar'
+       });
+
+//});
+$("#dashboard-breadcrumb-item").text(" ارسال كتاب");
+
+  //CKEDITOR.replace( 'editor1' );
+  //$('#summernote').Editor();
+  //$('#summernote').Editor("setText", "Hello");
+$( "#sendsy" ).click(function() {
+//alert(gsess);
+ toid = $("#to_id").val();
+ emailcc = $("#emailCc").val();
+ to_id = $("#to_id").val();
+ subject = $("#subject").val();
+ body = $("#editor1").val();
+$.ajax({                                      
+      url: 'save-data.php',              
+      type: "post",          
+      data: "toid="+toid+"&emailcc="+emailcc+"&subject="+subject+"&body="+body+"&emid="+gsess+"&to_id="+to_id,                
+      beforeSend: function() {
+          //$('#current_page').append("loading..");
+          },
+      success: function(e) {
+         //console.log(e); 
+       $.confirm({
+            title: 'ملاحظة!',
+            content: 'تم ارسال الكتاب بنجاح',
+            buttons: {
+                cancel: {
+                    text: 'موافق',
+                    btnClass: 'btn-success',
+                    action: function () {
+                }
+                },
+                sendanother: {
+                    text: 'ارسال كتاب اخر',
+                    btnClass: 'btn-warning',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        load_inside('./mail-compose.html','xp-contentbar');
+                    }
+                },
+                gohome: {
+                    text: 'الصفح الرئيسية',
+                    btnClass: 'btn-danger',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        load_inside('./home.html','xp-contentbar');
+                    }
+                }
+            }
+        });  
+       } 
+   });
+});
+
+// Multiple select
+ $( "#to_name" ).autocomplete({
+    
+    source: function( request, response ) {
+                
+      var searchText = extractLast(request.term);
+      $.ajax({
+         url: "search.php",
+         type: 'post',
+         dataType: "json",
+         data: {
+           search: searchText
+         },
+         success: function( data ) {
+            
+           response( data );
+           //console.log(data);
+         }
+       });
+    },
+    select: function( event, ui ) {
+        var terms = split( $('#to_name').val() );
+                
+        terms.pop();
+                
+        terms.push( ui.item.label );
+                
+        terms.push( "" );
+        $('#to_name').val(terms.join( ", " ));
+
+        // Id
+        terms = split( $('#to_id').val() );
+        //console.log(terms);        
+        terms.pop();
+                
+        terms.push( ui.item.value );
+                
+        terms.push( "" );
+        $('#to_id').val(terms.join( ", " ));
+
+        return false;
+     }
+           
+ });
+ function split( val ) {
+   return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+   return split( term ).pop();
+}
+
+});
+
+});
+</script>                    
