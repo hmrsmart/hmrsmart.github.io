@@ -29,7 +29,7 @@ function load_inside(fname,targ){
 
 //if (typeof my_id !== 'undefined') {
 //$('.'+targ).empty();
-console.clear();
+//console.clear();
    // $('.'+targ).load(fname);
       //window.location.hash = fname;
     //$(targ).load(fname);
